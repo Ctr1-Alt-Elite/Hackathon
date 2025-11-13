@@ -73,11 +73,7 @@
 							<goal>generate</goal>
 						</goals>
 						<configuration>
-<<<<<<< HEAD
 							<inputSpec>${project.basedir}/src/main/resources/openapi.yaml</inputSpec>
-=======
-							<inputSpec>${project.basedir}/src/main/resources/api.yaml</inputSpec>
->>>>>>> 2d4872b (init backend)
 							<generatorName>spring</generatorName>
 							<apiPackage>io.github.ctrl_alt_elite.hackathon.controllers</apiPackage> <!-- TODO -->
 							<modelPackage>io.github.ctrl_alt_elite.hackathon.dto</modelPackage> <!-- TODO -->
