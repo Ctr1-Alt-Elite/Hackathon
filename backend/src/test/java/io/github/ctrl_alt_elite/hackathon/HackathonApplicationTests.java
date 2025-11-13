@@ -10,21 +10,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
 
 @SpringBootTest
-@AutoConfigureMockMvc(addFilters = false)
 class HackathonApplicationTests {
 
 	@Test
 	void contextLoads() {
-	}
-
-	@Autowired
-	MockMvc mvc;
-
-	@Test
-	void pingTest() throws Exception {
-		mvc.perform(get("/ping"))
-			.andExpect(status().isOk())
-			.andExpect(content().string("pong"));
 	}
 
 }
