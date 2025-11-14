@@ -4,6 +4,7 @@ services:
       context: db
       dockerfile: Dockerfile.test
     container_name: mongodb
+    command: ["--replSet", "rs0", "--bind_ip_all", "--auth", "--keyFile", "/etc/mongodb-keyfile"]
     environment:
       - MONGO_INITDB_ROOT_USERNAME=root
       - MONGO_INITDB_ROOT_PASSWORD=12345
