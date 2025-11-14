@@ -31,7 +31,7 @@ import java.util.Map;
 import java.util.Optional;
 import jakarta.annotation.Generated;
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-11-13T18:38:29.401150+03:00[Europe/Moscow]", comments = "Generator version: 7.8.0")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-11-14T16:27:56.911444+03:00[Europe/Moscow]", comments = "Generator version: 7.8.0")
 @Validated
 @Tag(name = "Ping", description = "Tag for ping operation")
 public interface PingApi {
@@ -41,13 +41,13 @@ public interface PingApi {
     }
 
     /**
-     * GET /api/v1/ping : Check if server is alive
+     * GET /v1/ping : Check if server is alive
      * Returns pong as answer
      *
      * @return pong (status code 200)
      */
     @Operation(
-        operationId = "ping",
+        operationId = "pong",
         summary = "Check if server is alive",
         description = "Returns pong as answer",
         tags = { "Ping" },
@@ -59,11 +59,11 @@ public interface PingApi {
     )
     @RequestMapping(
         method = RequestMethod.GET,
-        value = "/api/v1/ping",
+        value = "/v1/ping",
         produces = { "application/json" }
     )
     
-    default ResponseEntity<String> ping(
+    default ResponseEntity<String> pong(
         
     ) {
         getRequest().ifPresent(request -> {

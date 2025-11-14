@@ -6,23 +6,49 @@ info:
   contact:
     name: Team Ctrl+Alt+Elite
 
-# components:
+components:
 #   schemas:
-#   parameters:
-#   responses:
+  parameters:
+    Address:
+      name: Address
+      in: header
+      required: true
+      description: address in blockchain for auth
+      schema:
+        type: string
+        example: "0x35686896756"
+
+  responses:
+    400BadRequest:
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            type: string
+            example: invalid body
+    
+    401Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            type: string
+            example: error
 
 tags:
   - name: Ping
     description: Tag for ping operation
+  - name: auth
+    description: Tag for authentification operations
 
 paths:
-  /api/v1/ping:
+  /v1/ping:
     get:
       tags:
         - "Ping"
       summary: "Check if server is alive"
       description: "Returns pong as answer"
-      operationId: ping
+      operationId: pong
       responses:
         200:
           description: pong
@@ -31,3 +57,53 @@ paths:
               schema:
                 type: string
                 example: "pong"
+
+  /v1/auth/nonce:
+    get:
+      tags:
+        - "Auth"
+      summary: "Step of authentification"
+      description: "Returns nonce for ethereum sign"
+      operationId: authNonce
+      parameters:
+        - $ref: '#/components/parameters/Address'
+      responses:
+        200:
+          description: message for signing
+          content:
+            application/json:
+              schema:
+                type: string
+                example: nonce
+
+  /v1/auth:
+    post:
+      tags:
+        - "Auth"
+      summary: "Step of authentification"
+      description: "Return JWT, if nonce signed correctly"
+      operationId: auth
+      parameters:
+        - $ref: '#/components/parameters/Address'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: string
+              example: SHA-256
+      responses:
+        200:
+          description: successful auth
+          content:
+            application/json:
+              schema:
+                type: string
+                example: "BABABABAB"
+        400:
+          $ref: '#/components/responses/400BadRequest'
+        401:
+          $ref: '#/components/responses/401Unauthorized'
+
+        
+        
