@@ -1,0 +1,99 @@
+.momo-trust-display-regular {
+  font-family: "Momo Trust Display", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.topApp {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+}
+
+.topApp > h1 {
+    font-family: "Momo Trust Display", sans-serif;
+    color: red;
+    border-left: 10px solid red;
+    display: flex;
+    align-items: center;
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  background: white;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  border-bottom: 3px solid red;
+  margin-bottom: 2rem;
+}
+
+.navigation {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  list-style: none;
+  width: 80%;
+  margin: 0;
+  padding: 0;
+  gap: 2rem;
+}
+
+.navigation li {
+  position: relative;
+}
+
+.navigation a {
+  text-decoration: none;
+  color: #333;
+  font-family: "Momo Trust Display", sans-serif;
+  font-weight: 500;
+  font-size: 1.1rem;
+  padding: 0.5rem 0;
+  transition: color 0.3s ease;
+  position: relative;
+}
+
+.navigation a:hover {
+  color: red;
+}
+
+.navigation a::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background-color: red;
+  transition: width 0.3s ease;
+}
+
+.navigation a:hover::after {
+  width: 100%;
+}
+
+.navigation a.active {
+  color: black;
+}
+
+.navigation a.active::after {
+  width: 100%;
+}
+
+@media (max-width: 768px) {
+  header {
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1rem;
+  }
+  
+  .navigation {
+    gap: 1rem;
+  }
+  
+  .navigation a {
+    font-size: 1rem;
+  }
+}
