@@ -13,14 +13,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.MultiValueMap;
 import org.web3j.crypto.Credentials;
-import org.web3j.crypto.Hash;
 import org.web3j.crypto.Sign;
 import org.web3j.utils.Numeric;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import io.github.ctrl_alt_elite.hackathon.service.EthereumService;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class AuthControllerTests {
@@ -30,7 +26,6 @@ public class AuthControllerTests {
 
     @Autowired
     private JwtTokenProvider jwtTokenProvider;
-
 
     
     private final String testPrivateKey = "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80";
@@ -44,11 +39,23 @@ public class AuthControllerTests {
         
         // 2. Создаем подпись
         String signature = signMessage(nonce, testCredentials);
-        
+
         // 3. Аутентифицируемся
         String jwtToken = authenticate(nonce, signature);
         String address = jwtTokenProvider.getAddressFromToken(jwtToken);
         Assertions.assertEquals(testAddress, address);
+
+        // 4. Auth ping
+        HttpEntity<String> entity = new HttpEntity<>(MultiValueMap.fromSingleValue(Map.of("Authorization", jwtToken)));
+        ResponseEntity<String> response = restTemplate.exchange(
+            "/v1/auth/ping",
+            HttpMethod.GET,
+            entity,
+            String.class
+        );
+
+        Assertions.assertEquals(HttpStatus.OK, response.getStatusCode());
+        Assertions.assertEquals("pong", response.getBody());
         
     }
     
@@ -79,8 +86,7 @@ public class AuthControllerTests {
     }
     
     private String signMessage(String message, Credentials credentials) {
-        byte[] messageHash = Hash.sha3(message.getBytes());
-        Sign.SignatureData signature = Sign.signMessage(messageHash, credentials.getEcKeyPair(), false);
+        Sign.SignatureData signature = Sign.signMessage(message.getBytes(), credentials.getEcKeyPair(), true);
         
         byte[] retval = new byte[65];
         System.arraycopy(signature.getR(), 0, retval, 0, 32);

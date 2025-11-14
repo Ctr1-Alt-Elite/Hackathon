@@ -6,6 +6,7 @@ import java.util.UUID;
 
 import org.springframework.stereotype.Repository;
 
+// TODO: store somewhere else
 @Repository
 public class NonceRepository {
     private final Map<String, String> store = new HashMap<>();

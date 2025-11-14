@@ -25,7 +25,7 @@ import java.util.Map;
 import java.util.Optional;
 import jakarta.annotation.Generated;
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-11-14T16:27:56.911444+03:00[Europe/Moscow]", comments = "Generator version: 7.8.0")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-11-14T21:26:26.707264+03:00[Europe/Moscow]", comments = "Generator version: 7.8.0")
 @Controller
 @RequestMapping("${openapi.hackathon.base-path:}")
 public class PingApiController implements PingApi {
@@ -44,6 +44,11 @@ public class PingApiController implements PingApi {
 
     @Override
     public ResponseEntity<String> pong() {
+        return ResponseEntity.ok().body("pong");
+    }
+
+    @Override
+    public ResponseEntity<String> authPong() {
         return ResponseEntity.ok().body("pong");
     }
 
