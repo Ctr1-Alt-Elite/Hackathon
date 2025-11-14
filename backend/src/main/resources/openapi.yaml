@@ -1,0 +1,33 @@
+openapi: 3.0.1
+info:
+  title: Hackathon #TODO
+  description: #TODO
+  version: v1
+  contact:
+    name: Team Ctrl+Alt+Elite
+
+# components:
+#   schemas:
+#   parameters:
+#   responses:
+
+tags:
+  - name: Ping
+    description: Tag for ping operation
+
+paths:
+  /api/v1/ping:
+    get:
+      tags:
+        - "Ping"
+      summary: "Check if server is alive"
+      description: "Returns pong as answer"
+      operationId: ping
+      responses:
+        200:
+          description: pong
+          content:
+            application/json:
+              schema:
+                type: string
+                example: "pong"
