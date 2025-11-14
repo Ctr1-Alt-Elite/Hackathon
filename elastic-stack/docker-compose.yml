@@ -29,19 +29,16 @@ services:
     image: python:3.9-alpine
     container_name: mongo-connector
     working_dir: /app
-    volumes:
-      - ./mongo-connector:/app
     command: >
-      sh -c "pip install mongo-connector elastic2-doc-manager pymongo &&
-             mongo-connector -m mongodb://root:12345@host.docker.internal:27017 -t http://elasticsearch:9200 -d elastic2_doc_manager --auto-commit-interval=5"
-    depends_on:
-      - elasticsearch
-    networks:
-      - elastic_network
+      sh -c "
+        pip install 'mongo-connector==3.1.1' 'elasticsearch==7.17.9' 'elastic2-doc-manager==0.3.0' pymongo &&
+        sleep 15 &&
+        mongo-connector -m mongodb://root:12345@host.docker.internal:27017 -t http://host.docker.internal:9200 -d elastic2_doc_manager --auto-commit-interval=5
+      "
     extra_hosts:
-      - "host.docker.internal:host-gateway"    
-
-
+      - "host.docker.internal:host-gateway"
+    restart: unless-stopped
+        
 volumes:
   elastic_data:
 
