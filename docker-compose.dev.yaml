@@ -1,0 +1,21 @@
+services:
+  mongodb:
+    build:
+      context: db
+      dockerfile: Dockerfile.test
+    container_name: mongodb
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=12345
+      - MONGO_INITDB_DATABASE=Storage-Base
+    ports:
+      - "27017:27017"
+    volumes:
+      - ./db/data:/data/db
+      - ./db/test-data:/docker-entrypoint-initdb.d
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
