@@ -6,8 +6,10 @@ import "./styles/Search.css"
 import Account from "./components/Account";
 import Search from "./components/Search";
 import TestConnection from "./components/TestButtons";
+import { useState } from "react";
 
 function App() {
+  const [jwt, setJwt] = useState('');
   return (
     <>
     <head>
@@ -25,12 +27,13 @@ function App() {
             <li><a href="#">Комментарии</a></li>
           </ul>
           <div>
-            <Account />
+            <Account setJwt={setJwt}/>
           </div>
         </header>
       </div>
       <div className="main-page-body">
-        <TestConnection />
+        <TestConnection url='http://localhost:8080/api/v1/ping' jwt={jwt}/>
+        <TestConnection url='http://localhost:8080/api/v1/auth/ping' jwt={jwt}/>
         <Search />
       </div>
       <aside>

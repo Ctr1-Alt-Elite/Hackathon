@@ -1,13 +1,24 @@
 import { useState } from "react";
 
-function TestConnection() {
+interface TestConnectionProps {
+    url: string;
+    jwt: string | null;
+}
+
+function TestConnection({ url, jwt }:TestConnectionProps) {
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(false);
 
   const testPing = async () => {
     setLoading(true);
     try {
-      const response = await fetch('http://localhost:8080/api/v1/ping');
+      const response = await fetch(url, {
+        method: 'GET',
+        headers: {
+          'Authorization': 'Bearer ' + jwt,
+          'Content-Type': 'application/json'
+        }
+      });
   
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
