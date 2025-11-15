@@ -47,7 +47,7 @@ public class AuthControllerTests {
         Assertions.assertEquals(testAddress, address);
 
         // 4. Auth ping
-        HttpEntity<String> entity = new HttpEntity<>(MultiValueMap.fromSingleValue(Map.of("Authorization", jwtToken)));
+        HttpEntity<String> entity = new HttpEntity<>(MultiValueMap.fromSingleValue(Map.of("Authorization", "Bearer " + jwtToken)));
         ResponseEntity<String> response = restTemplate.exchange(
             "/v1/auth/ping",
             HttpMethod.GET,
