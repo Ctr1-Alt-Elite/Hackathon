@@ -7,10 +7,16 @@ function TestConnection() {
   const testPing = async () => {
     setLoading(true);
     try {
-      const response = fetch('http://localhost:8080/api/v1/ping');
-      const data = (await response).text();
+      const response = await fetch('http://localhost:8080/api/v1/ping');
+  
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+  
+      const data = await response.text();
       setMessage(`Ping was successful with data: ${data}`);
     } catch (error) {
+      console.log(error);
       setMessage('Error while pinging the server');
     } finally {
       setLoading(false);
