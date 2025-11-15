@@ -29,8 +29,9 @@ replay_pid*
 # DB data
 db/data/*
 
-# maven deps
+# deps
 mvnDeps/*
+npmDeps/*
 
 # MacOS jokes
 .DS_Store
