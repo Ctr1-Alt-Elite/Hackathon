@@ -1,5 +1,6 @@
 package io.github.ctrl_alt_elite.hackathon.security;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
 import org.junit.jupiter.api.Assertions;
@@ -86,7 +87,8 @@ public class AuthControllerTests {
     }
     
     private String signMessage(String message, Credentials credentials) {
-        Sign.SignatureData signature = Sign.signMessage(message.getBytes(), credentials.getEcKeyPair(), true);
+        byte[] messageBytes = ("\u0019Ethereum Signed Message:\n" + message.length() + message).getBytes(StandardCharsets.UTF_8);
+        Sign.SignatureData signature = Sign.signMessage(messageBytes, credentials.getEcKeyPair(), true);
         
         byte[] retval = new byte[65];
         System.arraycopy(signature.getR(), 0, retval, 0, 32);

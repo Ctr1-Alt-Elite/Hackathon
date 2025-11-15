@@ -1,6 +1,7 @@
 package io.github.ctrl_alt_elite.hackathon.service;
 
 import java.math.BigInteger;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 
 import org.slf4j.Logger;
@@ -21,7 +22,7 @@ public class EthereumService {
      */
     public String verifySignature(String message, String signature) {
         try {
-            byte[] messageHash = message.getBytes();
+            byte[] messageBytes = ("\u0019Ethereum Signed Message:\n" + message.length() + message).getBytes(StandardCharsets.UTF_8);
             byte[] signatureBytes = Numeric.hexStringToByteArray(signature);
             
             // Разбираем подпись на компоненты
@@ -37,7 +38,7 @@ public class EthereumService {
             );
             
             // Восстанавливаем адрес из подписи
-            BigInteger publicKey = Sign.signedMessageToKey(messageHash, signatureData);
+            BigInteger publicKey = Sign.signedMessageToKey(messageBytes, signatureData);
             String recoveredAddress = "0x" + Keys.getAddress(publicKey);
             
             logger.info("Recovered address: {}", recoveredAddress);

@@ -33,7 +33,9 @@ public class SecurityConfig {
             .csrf(csrf -> csrf.disable())
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(authz -> authz
-                .requestMatchers("/v1/auth/**").permitAll()
+                .requestMatchers("/v1/auth").permitAll()
+                .requestMatchers("/v1/auth/").permitAll()
+                .requestMatchers("/v1/auth/nonce").permitAll()
                 .requestMatchers("/v1/ping").permitAll()
                 .anyRequest().authenticated()
             )
