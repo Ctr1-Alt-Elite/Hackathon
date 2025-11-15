@@ -31,6 +31,19 @@ services:
       - app-network
     command: ["mvn", "spring-boot:run", "-Dspring-boot.run.jvmArguments='-Dspring.profiles.active=dev'"]
 
+  frontend:
+    image: node:latest
+    container_name: frontend
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend:/app
+      - ./npmDeps:/app/node_modules
+    working_dir: /app
+    networks:
+      - app-network
+    command: ["sh", "-c", "npm run build && npm run preview -- --host 0.0.0.0 --port 3000"]
+
 networks:
   app-network:
     driver: bridge
