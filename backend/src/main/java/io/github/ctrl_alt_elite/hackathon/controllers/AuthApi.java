@@ -31,29 +31,35 @@ import java.util.Map;
 import java.util.Optional;
 import jakarta.annotation.Generated;
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-11-14T21:26:26.707264+03:00[Europe/Moscow]", comments = "Generator version: 7.8.0")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-11-14T17:14:34.420633+03:00[Europe/Moscow]", comments = "Generator version: 7.8.0")
 @Validated
-@Tag(name = "Ping", description = "Tag for ping operation")
-public interface PingApi {
+@Tag(name = "Auth", description = "the Auth API")
+public interface AuthApi {
 
     default Optional<NativeWebRequest> getRequest() {
         return Optional.empty();
     }
 
     /**
-     * GET /v1/auth/ping : Ping with authentification
-     * Return pong if you are authentificated
+     * POST /v1/auth : Step of authentification
+     * Return JWT, if nonce signed correctly
      *
-     * @return pong (status code 200)
+     * @param address address in blockchain for auth (required)
+     * @param body  (required)
+     * @return successful auth (status code 200)
+     *         or Bad Request (status code 400)
      *         or Unauthorized (status code 401)
      */
     @Operation(
-        operationId = "authPong",
-        summary = "Ping with authentification",
-        description = "Return pong if you are authentificated",
-        tags = { "Ping" },
+        operationId = "auth",
+        summary = "Step of authentification",
+        description = "Return JWT, if nonce signed correctly",
+        tags = { "Auth" },
         responses = {
-            @ApiResponse(responseCode = "200", description = "pong", content = {
+            @ApiResponse(responseCode = "200", description = "successful auth", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = String.class))
+            }),
+            @ApiResponse(responseCode = "400", description = "Bad Request", content = {
                 @Content(mediaType = "application/json", schema = @Schema(implementation = String.class))
             }),
             @ApiResponse(responseCode = "401", description = "Unauthorized", content = {
@@ -62,18 +68,25 @@ public interface PingApi {
         }
     )
     @RequestMapping(
-        method = RequestMethod.GET,
-        value = "/v1/auth/ping",
-        produces = { "application/json" }
+        method = RequestMethod.POST,
+        value = "/v1/auth",
+        produces = { "application/json" },
+        consumes = { "application/json" }
     )
     
-    default ResponseEntity<String> authPong(
-        
+    default ResponseEntity<String> auth(
+        @NotNull @Parameter(name = "Address", description = "address in blockchain for auth", required = true, in = ParameterIn.HEADER) @RequestHeader(value = "Address", required = true) String address,
+        @Parameter(name = "body", description = "", required = true) @Valid @RequestBody String body
     ) {
         getRequest().ifPresent(request -> {
             for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                    String exampleString = "\"pong\"";
+                    String exampleString = "\"BABABABAB\"";
+                    ApiUtil.setExampleResponse(request, "application/json", exampleString);
+                    break;
+                }
+                if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
+                    String exampleString = "\"invalid body\"";
                     ApiUtil.setExampleResponse(request, "application/json", exampleString);
                     break;
                 }
@@ -90,35 +103,36 @@ public interface PingApi {
 
 
     /**
-     * GET /v1/ping : Check if server is alive
-     * Returns pong as answer
+     * GET /v1/auth/nonce : Step of authentification
+     * Returns nonce for ethereum sign
      *
-     * @return pong (status code 200)
+     * @param address address in blockchain for auth (required)
+     * @return message for signing (status code 200)
      */
     @Operation(
-        operationId = "pong",
-        summary = "Check if server is alive",
-        description = "Returns pong as answer",
-        tags = { "Ping" },
+        operationId = "authNonce",
+        summary = "Step of authentification",
+        description = "Returns nonce for ethereum sign",
+        tags = { "Auth" },
         responses = {
-            @ApiResponse(responseCode = "200", description = "pong", content = {
+            @ApiResponse(responseCode = "200", description = "message for signing", content = {
                 @Content(mediaType = "application/json", schema = @Schema(implementation = String.class))
             })
         }
     )
     @RequestMapping(
         method = RequestMethod.GET,
-        value = "/v1/ping",
+        value = "/v1/auth/nonce",
         produces = { "application/json" }
     )
     
-    default ResponseEntity<String> pong(
-        
+    default ResponseEntity<String> authNonce(
+        @NotNull @Parameter(name = "Address", description = "address in blockchain for auth", required = true, in = ParameterIn.HEADER) @RequestHeader(value = "Address", required = true) String address
     ) {
         getRequest().ifPresent(request -> {
             for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                    String exampleString = "\"pong\"";
+                    String exampleString = "\"nonce\"";
                     ApiUtil.setExampleResponse(request, "application/json", exampleString);
                     break;
                 }

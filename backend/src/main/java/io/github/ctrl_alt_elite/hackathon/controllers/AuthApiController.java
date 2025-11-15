@@ -15,6 +15,9 @@ import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.multipart.MultipartFile;
+
+import io.github.ctrl_alt_elite.hackathon.service.AuthService;
+
 import org.springframework.web.context.request.NativeWebRequest;
 
 import jakarta.validation.constraints.*;
@@ -25,16 +28,18 @@ import java.util.Map;
 import java.util.Optional;
 import jakarta.annotation.Generated;
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-11-14T21:26:26.707264+03:00[Europe/Moscow]", comments = "Generator version: 7.8.0")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-11-14T17:14:34.420633+03:00[Europe/Moscow]", comments = "Generator version: 7.8.0")
 @Controller
 @RequestMapping("${openapi.hackathon.base-path:}")
-public class PingApiController implements PingApi {
+public class AuthApiController implements AuthApi {
 
     private final NativeWebRequest request;
+    private final AuthService service;
 
     @Autowired
-    public PingApiController(NativeWebRequest request) {
+    public AuthApiController(NativeWebRequest request, AuthService service) {
         this.request = request;
+        this.service = service;
     }
 
     @Override
@@ -43,13 +48,15 @@ public class PingApiController implements PingApi {
     }
 
     @Override
-    public ResponseEntity<String> pong() {
-        return ResponseEntity.ok().body("pong");
+    public ResponseEntity<String> authNonce(@NotNull String address) {
+        return ResponseEntity.ok().body(service.getNonce(address));
     }
 
     @Override
-    public ResponseEntity<String> authPong() {
-        return ResponseEntity.ok().body("pong");
+    public ResponseEntity<String> auth(@NotNull String address, @Valid String signature) {
+        String nonce = service.getNonce(address);
+        
+        return ResponseEntity.ok().body(service.authenticate(address, signature, nonce));
     }
 
 }
