@@ -17,6 +17,8 @@ services:
       - app-network
 
   backend:
+    depends_on:
+      - mongodb
     image: maven:latest
     container_name: backend
     ports:

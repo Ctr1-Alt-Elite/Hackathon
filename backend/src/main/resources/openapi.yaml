@@ -12,6 +12,9 @@ components:
       description: DTO for main entity Article
       type: object
       properties:
+        id:
+          type: string
+          example: "1"
         title:
           type: string
           example: article1
@@ -231,6 +234,31 @@ paths:
           $ref: '#/components/responses/400BadRequest'
         401:
           $ref: '#/components/responses/401Unauthorized'
+
+  /v1/articles/{id}:
+    delete:
+      tags:
+        - "Articles"
+      summary: "Search relevant Articles"
+      operationId: deleteArticle
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            example: "768ffrg8"
+      responses:
+        200:
+          description: Article deleted successefully
+        400:
+          $ref: '#/components/responses/400BadRequest'
+        401:
+          $ref: '#/components/responses/401Unauthorized'
+        404:
+          description: Article with this id not found
 
 
 

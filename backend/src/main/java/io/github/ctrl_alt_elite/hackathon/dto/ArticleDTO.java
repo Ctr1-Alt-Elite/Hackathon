@@ -21,8 +21,10 @@ import jakarta.annotation.Generated;
  */
 
 @Schema(name = "ArticleDTO", description = "DTO for main entity Article")
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-11-16T14:24:29.363983+03:00[Europe/Moscow]", comments = "Generator version: 7.8.0")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-11-16T15:56:29.955082+03:00[Europe/Moscow]", comments = "Generator version: 7.8.0")
 public class ArticleDTO {
+
+  private String id;
 
   private String title;
 
@@ -44,6 +46,26 @@ public class ArticleDTO {
     this.title = title;
     this.tags = tags;
     this.text = text;
+  }
+
+  public ArticleDTO id(String id) {
+    this.id = id;
+    return this;
+  }
+
+  /**
+   * Get id
+   * @return id
+   */
+  
+  @Schema(name = "id", example = "1", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("id")
+  public String getId() {
+    return id;
+  }
+
+  public void setId(String id) {
+    this.id = id;
   }
 
   public ArticleDTO title(String title) {
@@ -143,7 +165,8 @@ public class ArticleDTO {
       return false;
     }
     ArticleDTO articleDTO = (ArticleDTO) o;
-    return Objects.equals(this.title, articleDTO.title) &&
+    return Objects.equals(this.id, articleDTO.id) &&
+        Objects.equals(this.title, articleDTO.title) &&
         Objects.equals(this.author, articleDTO.author) &&
         Objects.equals(this.tags, articleDTO.tags) &&
         Objects.equals(this.text, articleDTO.text);
@@ -151,13 +174,14 @@ public class ArticleDTO {
 
   @Override
   public int hashCode() {
-    return Objects.hash(title, author, tags, text);
+    return Objects.hash(id, title, author, tags, text);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class ArticleDTO {\n");
+    sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    title: ").append(toIndentedString(title)).append("\n");
     sb.append("    author: ").append(toIndentedString(author)).append("\n");
     sb.append("    tags: ").append(toIndentedString(tags)).append("\n");

@@ -32,7 +32,7 @@ import java.util.Map;
 import java.util.Optional;
 import jakarta.annotation.Generated;
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-11-16T14:23:32.110594+03:00[Europe/Moscow]", comments = "Generator version: 7.8.0")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-11-16T17:29:43.068321+03:00[Europe/Moscow]", comments = "Generator version: 7.8.0")
 @Validated
 @Tag(name = "Articles", description = "Tag for operations with articles")
 public interface ArticlesApi {
@@ -96,6 +96,59 @@ public interface ArticlesApi {
 
 
     /**
+     * DELETE /v1/articles/{id} : Search relevant Articles
+     *
+     * @param id  (required)
+     * @return Article deleted successefully (status code 200)
+     *         or Bad Request (status code 400)
+     *         or Unauthorized (status code 401)
+     */
+    @Operation(
+        operationId = "deleteArticle",
+        summary = "Search relevant Articles",
+        tags = { "Articles" },
+        responses = {
+            @ApiResponse(responseCode = "200", description = "Article deleted successefully"),
+            @ApiResponse(responseCode = "400", description = "Bad Request", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = String.class))
+            }),
+            @ApiResponse(responseCode = "401", description = "Unauthorized", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = String.class))
+            })
+        },
+        security = {
+            @SecurityRequirement(name = "bearerAuth")
+        }
+    )
+    @RequestMapping(
+        method = RequestMethod.DELETE,
+        value = "/v1/articles/{id}",
+        produces = { "application/json" }
+    )
+    
+    default ResponseEntity<Void> deleteArticle(
+        @Parameter(name = "id", description = "", required = true, in = ParameterIn.PATH) @PathVariable("id") String id
+    ) {
+        getRequest().ifPresent(request -> {
+            for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
+                if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
+                    String exampleString = "\"invalid body\"";
+                    ApiUtil.setExampleResponse(request, "application/json", exampleString);
+                    break;
+                }
+                if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
+                    String exampleString = "\"error\"";
+                    ApiUtil.setExampleResponse(request, "application/json", exampleString);
+                    break;
+                }
+            }
+        });
+        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+
+    }
+
+
+    /**
      * GET /v1/articles/my : Return yours articles
      *
      * @return Articles which yoy authored (status code 200)
@@ -133,7 +186,7 @@ public interface ArticlesApi {
         getRequest().ifPresent(request -> {
             for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                    String exampleString = "[ { \"author\" : \"0x35686896756\", \"text\" : \"Lorem impsum\", \"title\" : \"article1\", \"tags\" : [ \"IT\", \"IT\" ] }, { \"author\" : \"0x35686896756\", \"text\" : \"Lorem impsum\", \"title\" : \"article1\", \"tags\" : [ \"IT\", \"IT\" ] } ]";
+                    String exampleString = "[ { \"author\" : \"0x35686896756\", \"id\" : \"1\", \"text\" : \"Lorem impsum\", \"title\" : \"article1\", \"tags\" : [ \"IT\", \"IT\" ] }, { \"author\" : \"0x35686896756\", \"id\" : \"1\", \"text\" : \"Lorem impsum\", \"title\" : \"article1\", \"tags\" : [ \"IT\", \"IT\" ] } ]";
                     ApiUtil.setExampleResponse(request, "application/json", exampleString);
                     break;
                 }
@@ -193,7 +246,7 @@ public interface ArticlesApi {
         getRequest().ifPresent(request -> {
             for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                    String exampleString = "[ { \"author\" : \"0x35686896756\", \"text\" : \"Lorem impsum\", \"title\" : \"article1\", \"tags\" : [ \"IT\", \"IT\" ] }, { \"author\" : \"0x35686896756\", \"text\" : \"Lorem impsum\", \"title\" : \"article1\", \"tags\" : [ \"IT\", \"IT\" ] } ]";
+                    String exampleString = "[ { \"author\" : \"0x35686896756\", \"id\" : \"1\", \"text\" : \"Lorem impsum\", \"title\" : \"article1\", \"tags\" : [ \"IT\", \"IT\" ] }, { \"author\" : \"0x35686896756\", \"id\" : \"1\", \"text\" : \"Lorem impsum\", \"title\" : \"article1\", \"tags\" : [ \"IT\", \"IT\" ] } ]";
                     ApiUtil.setExampleResponse(request, "application/json", exampleString);
                     break;
                 }
