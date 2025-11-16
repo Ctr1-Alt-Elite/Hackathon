@@ -4,10 +4,12 @@ services:
       context: db
       dockerfile: Dockerfile.test
     container_name: mongodb
-    command: ["--replSet", "rs0", "--bind_ip_all", "--auth", "--keyFile", "/etc/mongodb-keyfile"]
+    command: >
+      sh -c "
+        echo 'Starting MongoDB with replica set (no auth)...' &&
+        mongod --replSet rs0 --bind_ip_all
+      "
     environment:
-      - MONGO_INITDB_ROOT_USERNAME=root
-      - MONGO_INITDB_ROOT_PASSWORD=12345
       - MONGO_INITDB_DATABASE=Storage-Base
     ports:
       - "27017:27017"
@@ -16,6 +18,98 @@ services:
       - ./db/test-data:/docker-entrypoint-initdb.d
     networks:
       - app-network
+
+  mongo-setup:
+    image: mongo:6.0
+    container_name: mongo-setup
+    depends_on:
+      - mongodb
+    command: >
+      sh -c "
+        echo 'Waiting for MongoDB to start...' &&
+        sleep 10 &&
+        echo 'Initializing replica set...' &&
+        mongosh --host mongodb --eval '
+          try {
+            rs.status();
+            print(\"Replica set already initialized\");
+          } catch (e) {
+            if (e.codeName === \"NotYetInitialized\") {
+              print(\"Initializing replica set rs0...\"); 
+              rs.initiate({
+                _id: \"rs0\",
+                members: [{ _id: 0, host: \"mongodb:27017\" }]
+              });
+              print(\"Replica set initiated successfully\");
+            } else {
+              print(\"Error: \" + e.message);
+            }
+          }
+        ' &&
+        echo 'Waiting for replica set to become primary...' &&
+        sleep 10 &&
+        echo 'Checking replica set status...' &&
+        mongosh --host mongodb --eval '
+          try {
+            const status = rs.status();
+            print(\"Replica set status: \" + status.members[0].stateStr);
+            print(\"Replica set setup completed successfully!\");
+          } catch (e) {
+            print(\"Error checking status: \" + e.message);
+          }
+        '
+      "
+    networks:
+      - app-network
+
+  elasticsearch:
+    image: elasticsearch:8.11.0
+    container_name: elasticsearch
+    environment:
+      - discovery.type=single-node
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - xpack.security.enabled=false
+    ports:
+      - "9200:9200"
+    volumes:
+      - elastic_data:/usr/share/elasticsearch/data
+    networks:
+      - app-network
+
+  kibana:
+    image: kibana:8.11.0
+    container_name: kibana
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+    ports:
+      - "5601:5601"
+    depends_on:
+      - elasticsearch  
+    networks:
+      - app-network
+  
+  mongo-connector:
+    image: python:3.9-alpine
+    container_name: mongo-connector
+    working_dir: /app
+    command: >
+      sh -c "
+        echo 'Installing dependencies...' &&
+        pip install 'mongo-connector==3.1.1' 'elastic-doc-manager[elastic2]' 'pymongo==3.12.3' &&
+        echo 'Waiting for services to be ready...' &&
+        sleep 30 &&
+        echo 'Starting mongo-connector...' &&
+        mongo-connector -m mongodb://mongodb:27017 -t http://elasticsearch:9200 -d elastic_doc_manager --auto-commit-interval=5
+      "
+    restart: unless-stopped
+    depends_on:
+      - mongo-setup
+      - elasticsearch
+    networks:
+      - app-network
+
+volumes:
+  elastic_data:
 
 networks:
   app-network:
