@@ -139,6 +139,42 @@ public class ArticlesControllerTests {
     }
 
     @Test
+    public void updateTest() throws Exception {
+        ArticleDTO testArticle = new ArticleDTO()
+            .title("Stalin Sort")
+            .tags(List.of("It", "Algorithms"))
+            .text("This is test article about Stalin sort");
+        String jwt = provider.generateToken("0xf85903");
+
+        mvc.perform(post("/v1/articles/new")
+                .header("Authorization", "Bearer " + jwt)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(testArticle)))
+            .andExpect(status().isOk());
+
+        List<ArticleDTO> received = objectMapper.readValue(
+            mvc.perform(get("/v1/articles/my").header("Authorization", "Bearer " + jwt))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString(), 
+            objectMapper.getTypeFactory().constructCollectionType(List.class, ArticleDTO.class));
+
+        mvc.perform(put("/v1/articles/" + received.get(0).getId())
+                .header("Authorization", "Bearer " + jwt)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(testArticle.text("New text - new Life!"))))
+            .andExpect(status().isOk());
+
+        received = objectMapper.readValue(
+            mvc.perform(get("/v1/articles/my").header("Authorization", "Bearer " + jwt))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString(), 
+            objectMapper.getTypeFactory().constructCollectionType(List.class, ArticleDTO.class));
+
+        Assertions.assertEquals(1, received.size());
+        checkArticle(testArticle, "0xf85903", received.get(0));
+    }
+
+    @Test
     public void deleteTest() throws Exception {
         ArticleDTO testArticle = new ArticleDTO()
             .title("Stalin Sort")
@@ -169,5 +205,30 @@ public class ArticlesControllerTests {
             objectMapper.getTypeFactory().constructCollectionType(List.class, ArticleDTO.class));
         
         Assertions.assertEquals(List.of(), received);
+    }
+
+    @Test
+    public void deleteOthersTest() throws Exception {
+        ArticleDTO testArticle = new ArticleDTO()
+            .title("Stalin Sort")
+            .tags(List.of("It", "Algorithms"))
+            .text("This is test article about Stalin sort");
+        String jwt1 = provider.generateToken("0x97686868");
+        String jwt2 = provider.generateToken("0x121212");
+
+        mvc.perform(post("/v1/articles/new")
+                .header("Authorization", "Bearer " + jwt1)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(testArticle)))
+            .andExpect(status().isOk());
+
+        List<ArticleDTO> received = objectMapper.readValue(
+            mvc.perform(get("/v1/articles/my").header("Authorization", "Bearer " + jwt1))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString(), 
+            objectMapper.getTypeFactory().constructCollectionType(List.class, ArticleDTO.class));
+
+        mvc.perform(delete("/v1/articles/" + received.get(0).getId()).header("Authorization", "Bearer " + jwt2))
+            .andExpect(status().isForbidden());
     }
 }

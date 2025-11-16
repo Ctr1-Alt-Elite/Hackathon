@@ -236,10 +236,41 @@ paths:
           $ref: '#/components/responses/401Unauthorized'
 
   /v1/articles/{id}:
+    put:
+      tags:
+        - "Articles"
+      summary: "Update chosen Article"
+      operationId: updateArticle
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            example: "768ffrg8"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ArticleDTO'
+      responses:
+        200:
+          description: Article updated successefully
+        400:
+          $ref: '#/components/responses/400BadRequest'
+        401:
+          $ref: '#/components/responses/401Unauthorized'
+        403:
+          description: You are not author of this article
+        404:
+          description: Article with this id not found
     delete:
       tags:
         - "Articles"
-      summary: "Search relevant Articles"
+      summary: "delete chosen Article"
       operationId: deleteArticle
       security:
         - bearerAuth: []
@@ -257,6 +288,8 @@ paths:
           $ref: '#/components/responses/400BadRequest'
         401:
           $ref: '#/components/responses/401Unauthorized'
+        403:
+          description: You are not author of this article
         404:
           description: Article with this id not found
 

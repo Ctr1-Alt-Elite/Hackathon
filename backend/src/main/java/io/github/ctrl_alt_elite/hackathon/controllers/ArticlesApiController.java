@@ -73,8 +73,14 @@ public class ArticlesApiController implements ArticlesApi {
     }
 
     @Override
+    public ResponseEntity<Void> updateArticle(String id, @Valid ArticleDTO articleDTO) {
+        service.updateArticle(id, articleDTO.author(getAuthor()));
+        return ResponseEntity.ok(null);
+    }
+
+    @Override
     public ResponseEntity<Void> deleteArticle(String id) {
-        service.deleteArticle(id);
+        service.deleteArticle(id, getAuthor());
         return ResponseEntity.ok(null);
     }
 

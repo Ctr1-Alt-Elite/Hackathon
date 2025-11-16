@@ -32,7 +32,7 @@ import java.util.Map;
 import java.util.Optional;
 import jakarta.annotation.Generated;
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-11-16T17:29:43.068321+03:00[Europe/Moscow]", comments = "Generator version: 7.8.0")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-11-16T18:01:06.658883+03:00[Europe/Moscow]", comments = "Generator version: 7.8.0")
 @Validated
 @Tag(name = "Articles", description = "Tag for operations with articles")
 public interface ArticlesApi {
@@ -96,16 +96,18 @@ public interface ArticlesApi {
 
 
     /**
-     * DELETE /v1/articles/{id} : Search relevant Articles
+     * DELETE /v1/articles/{id} : delete chosen Article
      *
      * @param id  (required)
      * @return Article deleted successefully (status code 200)
      *         or Bad Request (status code 400)
      *         or Unauthorized (status code 401)
+     *         or You are not author of this article (status code 403)
+     *         or Article with this id not found (status code 404)
      */
     @Operation(
         operationId = "deleteArticle",
-        summary = "Search relevant Articles",
+        summary = "delete chosen Article",
         tags = { "Articles" },
         responses = {
             @ApiResponse(responseCode = "200", description = "Article deleted successefully"),
@@ -114,7 +116,9 @@ public interface ArticlesApi {
             }),
             @ApiResponse(responseCode = "401", description = "Unauthorized", content = {
                 @Content(mediaType = "application/json", schema = @Schema(implementation = String.class))
-            })
+            }),
+            @ApiResponse(responseCode = "403", description = "You are not author of this article"),
+            @ApiResponse(responseCode = "404", description = "Article with this id not found")
         },
         security = {
             @SecurityRequirement(name = "bearerAuth")
@@ -250,6 +254,66 @@ public interface ArticlesApi {
                     ApiUtil.setExampleResponse(request, "application/json", exampleString);
                     break;
                 }
+                if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
+                    String exampleString = "\"invalid body\"";
+                    ApiUtil.setExampleResponse(request, "application/json", exampleString);
+                    break;
+                }
+                if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
+                    String exampleString = "\"error\"";
+                    ApiUtil.setExampleResponse(request, "application/json", exampleString);
+                    break;
+                }
+            }
+        });
+        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+
+    }
+
+
+    /**
+     * PUT /v1/articles/{id} : Update chosen Article
+     *
+     * @param id  (required)
+     * @param articleDTO  (required)
+     * @return Article updated successefully (status code 200)
+     *         or Bad Request (status code 400)
+     *         or Unauthorized (status code 401)
+     *         or You are not author of this article (status code 403)
+     *         or Article with this id not found (status code 404)
+     */
+    @Operation(
+        operationId = "updateArticle",
+        summary = "Update chosen Article",
+        tags = { "Articles" },
+        responses = {
+            @ApiResponse(responseCode = "200", description = "Article updated successefully"),
+            @ApiResponse(responseCode = "400", description = "Bad Request", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = String.class))
+            }),
+            @ApiResponse(responseCode = "401", description = "Unauthorized", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = String.class))
+            }),
+            @ApiResponse(responseCode = "403", description = "You are not author of this article"),
+            @ApiResponse(responseCode = "404", description = "Article with this id not found")
+        },
+        security = {
+            @SecurityRequirement(name = "bearerAuth")
+        }
+    )
+    @RequestMapping(
+        method = RequestMethod.PUT,
+        value = "/v1/articles/{id}",
+        produces = { "application/json" },
+        consumes = { "application/json" }
+    )
+    
+    default ResponseEntity<Void> updateArticle(
+        @Parameter(name = "id", description = "", required = true, in = ParameterIn.PATH) @PathVariable("id") String id,
+        @Parameter(name = "ArticleDTO", description = "", required = true) @Valid @RequestBody ArticleDTO articleDTO
+    ) {
+        getRequest().ifPresent(request -> {
+            for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
                     String exampleString = "\"invalid body\"";
                     ApiUtil.setExampleResponse(request, "application/json", exampleString);
