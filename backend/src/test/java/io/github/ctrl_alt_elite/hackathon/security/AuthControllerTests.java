@@ -6,12 +6,17 @@ import java.util.Map;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.autoconfigure.data.mongo.MongoDataAutoConfiguration;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
+import org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.util.MultiValueMap;
 import org.web3j.crypto.Credentials;
 import org.web3j.crypto.Sign;
@@ -19,8 +24,18 @@ import org.web3j.utils.Numeric;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
+import io.github.ctrl_alt_elite.hackathon.repository.ArticleRepository;
+
+@EnableAutoConfiguration(exclude = {
+    MongoAutoConfiguration.class,
+    MongoDataAutoConfiguration.class,
+    DataSourceAutoConfiguration.class
+})
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class AuthControllerTests {
+
+    @MockitoBean
+	ArticleRepository repository;
     
     @Autowired
     private TestRestTemplate restTemplate;
@@ -58,6 +73,19 @@ public class AuthControllerTests {
         Assertions.assertEquals(HttpStatus.OK, response.getStatusCode());
         Assertions.assertEquals("pong", response.getBody());
         
+    }
+
+    @Test
+    public void notAuthorizedTest() throws Exception {
+        HttpEntity<String> entity = new HttpEntity<>(MultiValueMap.fromSingleValue(Map.of("Authorization", "Bearer ")));
+        ResponseEntity<String> response = restTemplate.exchange(
+            "/v1/auth/ping",
+            HttpMethod.GET,
+            entity,
+            String.class
+        );
+
+        Assertions.assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
     }
     
     private String getNonce() {

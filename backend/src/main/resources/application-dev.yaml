@@ -4,3 +4,13 @@ server:
     context-path: /api
   webflux:
     base-path: /api
+
+spring:
+  data:
+    mongodb:
+      host: localhost
+      port: 27017
+      database: Storage-base
+      username: root
+      password: 12345
+      auto-index-creation: false
