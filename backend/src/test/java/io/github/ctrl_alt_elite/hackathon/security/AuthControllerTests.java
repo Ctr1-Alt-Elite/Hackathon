@@ -59,6 +59,19 @@ public class AuthControllerTests {
         Assertions.assertEquals("pong", response.getBody());
         
     }
+
+    @Test
+    public void notAuthorizedTest() throws Exception {
+        HttpEntity<String> entity = new HttpEntity<>(MultiValueMap.fromSingleValue(Map.of("Authorization", "Bearer ")));
+        ResponseEntity<String> response = restTemplate.exchange(
+            "/v1/auth/ping",
+            HttpMethod.GET,
+            entity,
+            String.class
+        );
+
+        Assertions.assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
+    }
     
     private String getNonce() {
         HttpEntity<String> entity = new HttpEntity<>(MultiValueMap.fromSingleValue(Map.of("Address", testAddress)));
