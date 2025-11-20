@@ -15,6 +15,7 @@ services:
       - ./mongodb/data/mongo1/db:/data/db
       - ./mongodb/data/mongo1/configdb:/data/configdb
       - ./mongodb/scripts:/scripts
+      - ./mongodb/data.json:/data.json
     healthcheck:
       test: echo 'try { db.runCommand("ping").ok } catch (e) { 0 }' | mongosh --quiet
       interval: 10s
@@ -38,6 +39,7 @@ services:
       - ./mongodb/data/mongo2/db:/data/db
       - ./mongodb/data/mongo2/configdb:/data/configdb
       - ./mongodb/scripts:/scripts
+      - ./mongodb/data.json:/data.json
     depends_on:
       mongo1:
         condition: service_healthy
@@ -64,6 +66,7 @@ services:
       - ./mongodb/data/mongo3/db:/data/db
       - ./mongodb/data/mongo3/configdb:/data/configdb
       - ./mongodb/scripts:/scripts
+      - ./mongodb/data.json:/data.json
     depends_on:
       mongo2:
         condition: service_healthy
@@ -89,12 +92,15 @@ services:
         condition: service_healthy
     volumes:
       - ./mongodb/scripts:/scripts
+      - ./mongodb/data.json:/data.json
     command: >
       sh -c "
       echo 'Waiting for MongoDB nodes to be ready...' &&
       sleep 25 &&
       mongosh --host mongo1:27017 /scripts/replica-init.js &&
-      echo 'Goida.'
+      echo 'Goida.' &&
+      sleep 15 &&
+      mongosh --host mongo1:27017 /scripts/load-data.js"
     networks:
       - mongo-cluster
 

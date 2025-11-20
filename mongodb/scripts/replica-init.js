@@ -1,5 +1,5 @@
 // Replica set initialization script
-print("Starting replica set initialization...");
+print("=== Starting replica set initialization ===");
 
 // Wait a bit for all nodes to be ready
 sleep(5000);
@@ -87,9 +87,11 @@ try {
             quit(1);
         }
         
-        print("Replica set initialized successfully!");
         print("Final status:");
         printjson(rs.status());
+
+        print("=== Replica set initialized successfully! ===");
+
         
     } else {
         print(`Unexpected error: ${error}`);
