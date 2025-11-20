@@ -25,7 +25,7 @@ replay_pid*
 
 
 # DB data
-db/data/*
+mongodb/data/*
 
 # MacOS jokes
 .DS_Store
