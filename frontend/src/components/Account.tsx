@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { ethers } from 'ethers';
+import "../styles/Account.css"
 
 interface AccountProps {
     setJwt: React.Dispatch<React.SetStateAction<string>>;

@@ -1,0 +1,16 @@
+button {
+    color: black;
+    font-family: "Momo Trust Display", sans-serif;
+    font-size: 1rem;
+    padding: 0.5rem 1rem;
+    margin: 0 0.5rem;
+    border: 2px solid black;
+    border-radius: 8px;
+    cursor: pointer;
+
+    background-color: white;
+
+    &:hover {
+        background-color: #f0f0f0;
+    }
+}
