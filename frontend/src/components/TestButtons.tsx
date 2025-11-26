@@ -36,7 +36,7 @@ function TestConnection({ url, jwt }:TestConnectionProps) {
 
   return (
     <div className="pingChecking">
-      <h3>Тест подключения к бекенду</h3>
+      <h3>Проверить подключение к серверу и базе данных</h3>
       <button onClick={testPing}>
         {loading ? 'Проверяем...' : 'Проверить связь'}
       </button>

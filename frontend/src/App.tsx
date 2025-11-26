@@ -1,15 +1,33 @@
 import "./styles/Navigation.css";
 import "./styles/Search.css";
+import "./styles/Article.css";
 
 import Account from "./components/Account";
 import Search from "./components/Search";
-// import DocumentsPage from "./components/DocumentsPage";
+import ArticlePage from "./components/ArticlePage";
 import TestConnection from "./components/TestButtons";
 import { useState } from "react";
+import type { Article } from "./types/api";
+import DocumentsPage from "./components/DocumentPage";
+
 
 function App() {
+
   const [jwt, setJwt] = useState('');
   const [currentPage, setCurrentPage] = useState('home');
+  const [currentArticle, setCurrentArticle] = useState<Article | null>(null);
+
+  const handleArticleClick = (article: Article) => {
+    setCurrentArticle(article);
+  };
+
+  const handleBackFromArticle = () => {
+    setCurrentArticle(null);
+  };
+
+  if (currentArticle) {
+    return <ArticlePage article={currentArticle} onBack={handleBackFromArticle} />;
+  }
 
   return (
     <>
@@ -53,13 +71,14 @@ function App() {
 
         {currentPage === 'home' && (
           <div className="main-page-body">
-            <TestConnection url='http://localhost:8080/api/v1/ping' jwt={jwt}/>
-            <TestConnection url='http://localhost:8080/api/v1/auth/ping' jwt={jwt}/>
-            <Search />
+            <TestConnection url='http://localhost:8080/v1/auth/ping' jwt={jwt}/>
+            <Search jwt={jwt} onArticleClick={handleArticleClick} />
           </div>
         )}
 
-        {/* {currentPage === 'documents' && <DocumentsPage />} */}
+        {currentPage === 'documents' && (
+          <DocumentsPage jwt={jwt} onArticleClick={handleArticleClick} />
+        )}
 
         <aside></aside>
       </div>
