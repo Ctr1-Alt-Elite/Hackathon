@@ -39,5 +39,20 @@ export const api = {
     }
 
     return await response.json();
+  },
+
+    createArticle: async (article: Article, jwt: string): Promise<void> => {
+    const response = await fetch(`${API_BASE}/articles/new`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${jwt}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(article)
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
   }
 };

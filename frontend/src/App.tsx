@@ -1,6 +1,8 @@
 import "./styles/Navigation.css";
-import "./styles/Search.css";
 import "./styles/Article.css";
+import "./styles/Account.css";
+import "./styles/App.css";
+import "./styles/Search.css";
 
 import Account from "./components/Account";
 import Search from "./components/Search";
@@ -9,10 +11,9 @@ import TestConnection from "./components/TestButtons";
 import { useState } from "react";
 import type { Article } from "./types/api";
 import DocumentsPage from "./components/DocumentPage";
-
+import CreateArticle from "./components/CreateArticle";
 
 function App() {
-
   const [jwt, setJwt] = useState('');
   const [currentPage, setCurrentPage] = useState('home');
   const [currentArticle, setCurrentArticle] = useState<Article | null>(null);
@@ -25,8 +26,16 @@ function App() {
     setCurrentArticle(null);
   };
 
+  const handleArticleCreated = () => {
+    console.log('Article created');
+  };
+
   if (currentArticle) {
     return <ArticlePage article={currentArticle} onBack={handleBackFromArticle} />;
+  }
+
+  if (currentPage === 'create') {
+    return <CreateArticle jwt={jwt} onBack={() => setCurrentPage('home')} onArticleCreated={handleArticleCreated} />;
   }
 
   return (
@@ -71,8 +80,14 @@ function App() {
 
         {currentPage === 'home' && (
           <div className="main-page-body">
-            <TestConnection url='http://localhost:8080/v1/auth/ping' jwt={jwt}/>
-            <Search jwt={jwt} onArticleClick={handleArticleClick} />
+            <TestConnection url='http://localhost:8080/v1/ping' jwt={jwt}/>            
+            <button 
+              className={jwt ? "create-article-btn" : "create-article-btn disabled"}
+              onClick={() => jwt && setCurrentPage('create')}
+            >
+              📄 Создать статью
+            </button>
+              <Search jwt={jwt} onArticleClick={handleArticleClick} />
           </div>
         )}
 

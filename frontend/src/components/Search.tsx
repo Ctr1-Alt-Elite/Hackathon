@@ -1,22 +1,16 @@
 import React, { useState } from "react";
 import "../styles/Search.css";
-import type { Article } from "../types/api";
-import { api } from "../types/api";
 
-interface SearchProps {
-  jwt: string;
-  onArticleClick: (article: Article) => void;
-}
-
-function Search({ jwt, onArticleClick }: SearchProps) {
+function Search() {
   const [searchTerm, setSearchTerm] = useState("");
-  const [results, setResults] = useState<Article[]>([]);
+  const [results, setResults] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(event.target.value);
   };
 
+  // Заглушка для будущей логики поиска
   const handleSearch = async () => {
     if (!searchTerm.trim()) {
       setResults([]);
@@ -25,12 +19,20 @@ function Search({ jwt, onArticleClick }: SearchProps) {
 
     setLoading(true);
     
+    // TODO: Заменить на реальный вызов к Python AI бекенду, когда он появится
+    // Возможно, надо будет пересмотреть логику обработки результатов, если придётся сликшом часто обновлять, а поиск будет дорогим по времени
     try {
-      const searchResults = await api.searchArticles(searchTerm, jwt);
-      setResults(searchResults);
+      // Имитация задержки API для полного погружения в страну приколов
+      await new Promise(resolve => setTimeout(resolve, 300));
+      const mockResults = [
+        `Результат 1`,
+        `Результат 2`,
+        `Результат 3`
+      ]
+      setResults(mockResults);
     } catch (error) {
       console.error('Search error:', error);
-      setResults([]);
+      setResults(['Ошибка при поиске']);
     } finally {
       setLoading(false);
     }
@@ -66,25 +68,12 @@ function Search({ jwt, onArticleClick }: SearchProps) {
         <div className="search-results">
           <h3>Результаты поиска ({results.length})</h3>
           <div className="results-grid">
-            {results.map((article, index) => (
-              <div 
-                key={article.id || index} 
-                className="result-card"
-                onClick={() => onArticleClick(article)}
-              >
-                <h4>{article.title}</h4>
-                <p className="result-card-content">
-                  {article.text.substring(0, 150)}...
-                </p>
+            {results.map((item, index) => (
+              <div key={index} className="result-card">
+                <p className="result-card-content">{item}</p>
                 <div className="result-card-meta">
-                  {article.author && <span>Автор: {article.author}</span>}
-                  {article.tags && article.tags.length > 0 && (
-                    <div className="result-tags">
-                      {article.tags.slice(0, 3).map(tag => (
-                        <span key={tag} className="tag-small">#{tag}</span>
-                      ))}
-                    </div>
-                  )}
+                  <span>Документ {index + 1}</span>
+                  <span className="result-card-type">PDF</span>
                 </div>
               </div>
             ))}

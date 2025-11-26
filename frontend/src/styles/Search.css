@@ -6,6 +6,7 @@
   display: flex;
   gap: 1rem;
   margin: 2rem 1rem;
+  height: 45px;
 }
 
 .search-input {
@@ -33,7 +34,7 @@
   font-size: 1.1rem;
   transition: background-color 0.3s;
   white-space: nowrap;
-
+  
   &:hover:not(:disabled) {
     background-color: #b91c1c;
   }
@@ -42,6 +43,21 @@
     background-color: #ccc;
     cursor: not-allowed;
   }
+}
+
+.search-button {
+  background-color: #dc2626;
+  color: white;
+  border: none;
+  padding: 0.4rem 1.2rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background-color 0.3s;
+  white-space: nowrap;
+  height: 100%;
+  position: relative;
+  top: -20px;
 }
 
 .search-results {
